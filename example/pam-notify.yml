@@ -1,0 +1,9 @@
+server: example
+logging:
+  level: info
+  file: /var/log/pam-notify.log
+notifiers:
+  - type: discord
+    url: https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+middlewares:
+  geoip: true
