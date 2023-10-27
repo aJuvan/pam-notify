@@ -1,0 +1,39 @@
+name: Merge Requests
+
+on:
+  pull_request:
+    branches:
+      - master
+  merge_group:
+    branches:
+      - master
+
+permissions:
+  security-events: write
+  contents: read
+
+jobs:
+  osv-scanner:
+    name: osv-scanner
+    uses: google/osv-scanner/.github/workflows/osv-scanner-reusable.yml
+    with:
+      scan-args: |-
+        --skip-git
+        ./
+  golangci:
+    strategy:
+      matrix:
+        go: ['1.21']
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    name: golangci
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go }}
+          cache: false
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.55
