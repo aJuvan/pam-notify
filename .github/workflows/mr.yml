@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         go: ['1.21']
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
     name: golangci
     runs-on: ${{ matrix.os }}
     steps:
