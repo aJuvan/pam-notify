@@ -1,6 +1,5 @@
 name: Merge Requests
 
-
 on:
   pull_request:
     branches:

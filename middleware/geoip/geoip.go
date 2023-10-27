@@ -3,7 +3,7 @@ package geoip
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/aJuvan/pam-notify/config"
@@ -37,7 +37,7 @@ func Run(userData *config.UserData) (*MiddlewareGeoIPData, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/aJuvan/pam-notify/config"
@@ -124,7 +124,7 @@ func Notify(userData config.UserData, notifier config.ConfigNotifier, middleware
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusNoContent {
-		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		bodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return err
 		}
