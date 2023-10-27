@@ -15,7 +15,7 @@ permissions:
 jobs:
   osv-scanner:
     name: osv-scanner
-    uses: google/osv-scanner/.github/workflows/osv-scanner-reusable.yml
+    uses: google/osv-scanner/.github/workflows/osv-scanner-reusable.yml@main
     with:
       scan-args: |-
         --skip-git
