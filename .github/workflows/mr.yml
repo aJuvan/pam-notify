@@ -1,5 +1,6 @@
 name: Merge Requests
 
+
 on:
   pull_request:
     branches:
@@ -8,11 +9,14 @@ on:
     branches:
       - master
 
+
 permissions:
   security-events: write
   contents: read
 
+
 jobs:
+
   osv-scanner:
     name: osv-scanner
     uses: google/osv-scanner/.github/workflows/osv-scanner-reusable.yml@main
@@ -20,6 +24,7 @@ jobs:
       scan-args: |-
         --skip-git
         ./
+
   golangci:
     strategy:
       matrix:
