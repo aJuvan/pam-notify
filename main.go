@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/aJuvan/pam-notify/config"
+	"github.com/aJuvan/pam-notify/filters"
 	"github.com/aJuvan/pam-notify/middleware"
 	"github.com/aJuvan/pam-notify/notifiers"
 )
@@ -43,25 +44,23 @@ func main() {
 		Str("service", userData.Service).
 		Msg(fmt.Sprintf("User '%s' logged in from %s", userData.Username, userData.Rhost))
 
-	middlewareData := middleware.Run(cfg, userData)
-
-	failure := false
-	for _, notifier := range cfg.Notifiers {
-		f := notifiers.Notifiers[notifier.Type]
-		err = f(userData, notifier, middlewareData)
-		if err != nil {
-			failure = true
-			config.Logger.
-				Error().
-				Str("service", userData.Service).
-				Str("notifier", notifier.Type).
-				Err(err).
-				Msg(fmt.Sprintf("Failed to notify user '%s'", userData.Username))
-		}
+	cont, err := filters.Run(&cfg.Filters, &userData)
+	if err != nil {
+		config.Logger.Error().Err(err).Msg("Filters failed")
+	} else if !cont {
+		config.Logger.Debug().Msg("Execution stopped by filters")
+		return
 	}
 
-	if failure {
-		os.Exit(1)
+	middlewareData := middleware.Run(&cfg.Middlewares, &userData)
+
+	err = notifiers.Run(&cfg.Notifiers, &userData, &middlewareData)
+	if err != nil {
+		config.Logger.
+			Error().
+			Err(err).
+			Str("service", userData.Service).
+			Msg(fmt.Sprintf("Failed to notify user '%s'", userData.Username))
 	}
 }
 

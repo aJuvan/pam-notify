@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/aJuvan/pam-notify/config"
@@ -35,7 +35,7 @@ type webhookBodyEmbedsFooter struct {
 	Text string `json:"text"`
 }
 
-func Notify(userData config.UserData, notifier config.ConfigNotifier, middlewareData middleware.MiddlewareData) error {
+func Run(notifier *config.ConfigNotifierDiscord, userData *config.UserData, middlewareData *middleware.MiddlewareData) error {
 	body := webhookBody{
 		Username: "PAM-Notify",
 		Content:  "",
@@ -114,7 +114,7 @@ func Notify(userData config.UserData, notifier config.ConfigNotifier, middleware
 	}
 
 	resp, err := http.Post(
-		notifier.Url,
+		notifier.Webhook,
 		"application/json",
 		bytes.NewBuffer(bodyJson),
 	)
@@ -124,7 +124,7 @@ func Notify(userData config.UserData, notifier config.ConfigNotifier, middleware
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusNoContent {
-		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		bodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return err
 		}

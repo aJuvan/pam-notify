@@ -6,8 +6,17 @@ import (
 	"github.com/aJuvan/pam-notify/notifiers/discord"
 )
 
-type Notifier func(config.UserData, config.ConfigNotifier, middleware.MiddlewareData) error
+func Run(conf *config.ConfigNotifiers, userData *config.UserData, middlewareData *middleware.MiddlewareData) error {
+	notifiersLogger := config.Logger.With().Str("module", "notifiers").Logger()
 
-var Notifiers = map[string]Notifier{
-	"discord": discord.Notify,
+	for i, d := range conf.Discord {
+		notifiersLogger.Debug().Int("index", i).Msg("Running Discord notifier")
+		err := discord.Run(&d, userData, middlewareData)
+		if err != nil {
+			notifiersLogger.Error().Err(err).Int("index", i).Msg("Discord notifier failed")
+			return err
+		}
+	}
+
+	return nil
 }

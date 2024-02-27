@@ -9,45 +9,19 @@ type MiddlewareData struct {
 	GeoIP *geoip.MiddlewareGeoIPData
 }
 
-func Run(conf *config.Config, userData config.UserData) MiddlewareData {
+func Run(conf *config.ConfigMiddlewares, userData *config.UserData) MiddlewareData {
 	middlewareLogger := config.Logger.With().Str("module", "middleware").Logger()
 	middlewareData := MiddlewareData{}
 
-	if conf.Middlewares == nil {
-		return middlewareData
-	}
-
-	ch := make(chan error)
-	routines := 0
-
-	if conf.Middlewares.GeoIP != nil && *conf.Middlewares.GeoIP {
-		routines++
-		go func() {
-			geoIPData, err := geoip.Run(&userData)
-			if err != nil {
-				middlewareLogger.
-					Error().
-					Err(err).
-					Msg("Error while running geoip middleware")
-				ch <- err
-				return
-			}
-			middlewareData.GeoIP = geoIPData
-			ch <- nil
-		}()
-	}
-
-	failures := 0
-	for i := 0; i < routines; i++ {
-		err := <-ch
+	if conf.GeoIP.Enabled {
+		middlewareLogger.Debug().Msg("Running GeoIP middleware")
+		tmp, err := geoip.Run(&conf.GeoIP, userData)
 		if err != nil {
-			failures += 1
+			middlewareLogger.Error().Err(err).Msg("GeoIP middleware failed")
+		} else {
+			middlewareData.GeoIP = tmp
 		}
 	}
-
-	middlewareLogger.
-		Info().
-		Msgf("Ran %d out of %d middleware rutined", routines-failures, routines)
 
 	return middlewareData
 }

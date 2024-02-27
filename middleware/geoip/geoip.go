@@ -3,7 +3,7 @@ package geoip
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/aJuvan/pam-notify/config"
@@ -30,14 +30,14 @@ type apiData struct {
 	Hostname  *string  `json:"hostname"`
 }
 
-func Run(userData *config.UserData) (*MiddlewareGeoIPData, error) {
+func Run(conf *config.ConfigMiddlewaresGeoIP, userData *config.UserData) (*MiddlewareGeoIPData, error) {
 	resp, err := http.Get("https://json.geoiplookup.io/" + userData.Rhost)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

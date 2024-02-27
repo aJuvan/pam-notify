@@ -7,30 +7,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type UserData struct {
-	Server   string
-	Username string
-	Service  string
-	Rhost    string
-}
-
-type Config struct {
-	Server      string            `json:"hostname"`
-	Logging     ConfigLogging     `json:"logging"`
-	Notifiers   []ConfigNotifier  `json:"notifiers"`
-	Middlewares *MiddlewareConfig `json:"middlewares"`
-}
-
-type ConfigLogging struct {
-	Level string `json:"level"`
-	File  string `json:"file"`
-}
-
-type ConfigNotifier struct {
-	Type string `json:"type"`
-	Url  string `json:"url"`
-}
-
 func LoadConfig() (*Config, error) {
 	configFile := flag.String("config", "/etc/pam-notify.yml", "Path to config file")
 	flag.Parse()

@@ -3,7 +3,13 @@ logging:
   level: info
   file: /var/log/pam-notify.log
 notifiers:
-  - type: discord
-    url: https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  discord:
+  - webhook: https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 middlewares:
-  geoip: true
+  geoip:
+    enabled: true
+filters:
+  ipfilter:
+    enabled: true
+    cidrs:
+    - "192.168.1.0/24"
