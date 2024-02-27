@@ -21,11 +21,17 @@ type ConfigLogging struct {
 }
 
 type ConfigNotifiers struct {
-	Discord []ConfigNotifierDiscord `json:"discord"`
+	Discord  []ConfigNotifierDiscord  `json:"discord"`
+	Telegram []ConfigNotifierTelegram `json:"telegram"`
 }
 
 type ConfigNotifierDiscord struct {
 	Webhook string `json:"webhook"`
+}
+
+type ConfigNotifierTelegram struct {
+	ChatId string `json:"chatid"`
+	Token  string `json:"token"`
 }
 
 type ConfigMiddlewares struct {

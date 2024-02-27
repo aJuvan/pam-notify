@@ -1,10 +1,13 @@
-server: example
+server: "example"
 logging:
-  level: info
-  file: /var/log/pam-notify.log
+  level: "info"
+  file: "/var/log/pam-notify.log"
 notifiers:
   discord:
-  - webhook: https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  - webhook: "https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxx/yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  telegram:
+  - chatid: "-1234567890"
+    token: "1234567890:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 middlewares:
   geoip:
     enabled: true
